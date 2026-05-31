@@ -34,305 +34,178 @@ body{min-height:100vh;font-family:'Nunito',sans-serif;background:linear-gradient
 <div id="app"></div>
 <script>
 
-// ============================================================
-// STEP1: 商品カテゴリ
-// ============================================================
-var CATEGORIES = [
-  {id:"invitation", label:"招待状・カード", icon:"✉️", desc:"パーティー・ウェディングなど"},
-  {id:"wallart",    label:"ウォールアート・ポスター", icon:"🖼️", desc:"部屋・ナーサリー・オフィス"},
-  {id:"planner",    label:"プランナー・手帳", icon:"📔", desc:"手帳・カレンダー・トラッカー"},
-  {id:"label",      label:"ラベル・タグ類", icon:"🏷️", desc:"キャンドル・パントリー・商品タグ"},
-  {id:"party_deco", label:"パーティーデコセット", icon:"🎉", desc:"バナー・ガーランド・飾り"},
-  {id:"baby",       label:"ベビー・マタニティ", icon:"👶", desc:"命名書・マイルストーン"},
-  {id:"sticker",    label:"ステッカー・シール", icon:"🌟", desc:"プランナー・手帳デコ"},
-  {id:"brand",      label:"ブランド・SNS素材", icon:"📱", desc:"タグ・ケアカード・Instagram"},
+var SCENES = [
+  {id:"baby_girl",    label:"ベビーシャワー・女の子", icon:"👶🎀", desc:"Baby Shower Girl"},
+  {id:"baby_boy",     label:"ベビーシャワー・男の子", icon:"👶💙", desc:"Baby Shower Boy"},
+  {id:"baby_neutral", label:"ベビーシャワー・ニュートラル", icon:"🌿", desc:"Baby Shower Neutral"},
+  {id:"bday_girl",    label:"誕生日・女の子", icon:"🎂👧", desc:"Birthday Girl"},
+  {id:"bday_boy",     label:"誕生日・男の子", icon:"🎂👦", desc:"Birthday Boy"},
+  {id:"wedding",      label:"ウェディング", icon:"💍", desc:"Wedding"},
 ];
 
-// ============================================================
-// STEP2: シーン（カテゴリごと）
-// ============================================================
-var SCENES = {
-  invitation: [
-    {id:"wedding",       label:"ウェディング", icon:"💍"},
-    {id:"baby_shower",   label:"ベビーシャワー", icon:"🍼"},
-    {id:"birthday_kids", label:"誕生日（子ども）", icon:"🎂"},
-    {id:"birthday_adult",label:"誕生日（大人）", icon:"🥂"},
-    {id:"graduation",    label:"卒業パーティー", icon:"🎓"},
-    {id:"bridal_shower", label:"ブライダルシャワー", icon:"💐"},
-    {id:"xmas_party",    label:"クリスマスパーティー", icon:"🎄"},
-    {id:"general_party", label:"その他パーティー", icon:"🎊"},
-  ],
-  wallart: [
-    {id:"nursery",       label:"ベビー・ナーサリー", icon:"🌙"},
-    {id:"kids_room",     label:"子ども部屋", icon:"🧸"},
-    {id:"living",        label:"リビング・寝室", icon:"🛋️"},
-    {id:"kitchen",       label:"キッチン・ダイニング", icon:"🍳"},
-    {id:"office",        label:"ホームオフィス", icon:"💻"},
-    {id:"quote",         label:"クォート・名言", icon:"💬"},
-    {id:"botanical",     label:"ボタニカル・植物", icon:"🌿"},
-    {id:"abstract",      label:"アブストラクト", icon:"🎨"},
-  ],
-  planner: [
-    {id:"daily",         label:"デイリープランナー", icon:"📅"},
-    {id:"weekly",        label:"ウィークリープランナー", icon:"🗓️"},
-    {id:"budget",        label:"家計・バジェットプランナー", icon:"💰"},
-    {id:"meal",          label:"食事・ミールプランナー", icon:"🍽️"},
-    {id:"fitness",       label:"フィットネス・健康記録", icon:"💪"},
-    {id:"wedding_plan",  label:"ウェディングプランナー", icon:"💍"},
-    {id:"study",         label:"勉強・スタディプランナー", icon:"📚"},
-    {id:"calendar",      label:"カレンダー", icon:"📆"},
-  ],
-  label: [
-    {id:"candle_label",  label:"キャンドルラベル", icon:"🕯️"},
-    {id:"pantry_label",  label:"パントリー・キッチンラベル", icon:"🫙"},
-    {id:"product_label", label:"商品・パッケージラベル", icon:"📦"},
-    {id:"gift_tag",      label:"ギフトタグ", icon:"🎁"},
-    {id:"hang_tag",      label:"商品ハングタグ", icon:"🏷️"},
-    {id:"wine_label",    label:"ワイン・ボトルラベル", icon:"🍷"},
-    {id:"jam_label",     label:"ジャム・食品ラベル", icon:"🫐"},
-    {id:"bath_label",    label:"バス・コスメラベル", icon:"🧴"},
-  ],
-  party_deco: [
-    {id:"birthday_deco", label:"誕生日パーティーデコ", icon:"🎂"},
-    {id:"wedding_deco",  label:"ウェディングデコ", icon:"💍"},
-    {id:"baby_shower_deco", label:"ベビーシャワーデコ", icon:"🍼"},
-    {id:"xmas_deco",     label:"クリスマスデコ", icon:"🎄"},
-    {id:"halloween_deco",label:"ハロウィンデコ", icon:"🎃"},
-    {id:"graduation_deco",label:"卒業パーティーデコ", icon:"🎓"},
-    {id:"bridal_deco",   label:"ブライダルシャワーデコ", icon:"💐"},
-    {id:"general_deco",  label:"その他パーティーデコ", icon:"🎊"},
-  ],
-  baby: [
-    {id:"milestone",     label:"マイルストーンカード", icon:"📸"},
-    {id:"naming",        label:"命名書・バースデイボード", icon:"📜"},
-    {id:"birth_announce",label:"出生アナウンスメント", icon:"👼"},
-    {id:"baby_shower_set",label:"ベビーシャワーセット", icon:"🎀"},
-    {id:"nursery_art",   label:"ナーサリーウォールアート", icon:"🌙"},
-    {id:"baby_gift_tag", label:"ベビーギフトタグ", icon:"🎁"},
-    {id:"pregnancy",     label:"マタニティ・妊娠記録", icon:"🤰"},
-    {id:"baby_planner",  label:"育児記録・ベビープランナー", icon:"📔"},
-  ],
-  sticker: [
-    {id:"planner_sticker",label:"プランナーステッカー", icon:"📅"},
-    {id:"bujo_sticker",  label:"バレットジャーナル", icon:"📓"},
-    {id:"cute_sticker",  label:"かわいい・キャラクター", icon:"🌸"},
-    {id:"season_sticker",label:"季節・イベント", icon:"🍂"},
-    {id:"label_sticker", label:"ラベルステッカー", icon:"🏷️"},
-    {id:"reward_sticker",label:"ごほうびシール", icon:"⭐"},
-    {id:"kids_sticker",  label:"子ども向け", icon:"🧸"},
-    {id:"quote_sticker", label:"クォートステッカー", icon:"💬"},
-  ],
-  brand: [
-    {id:"social_post",   label:"SNS投稿テンプレート", icon:"📱"},
-    {id:"instagram_story",label:"Instagramストーリー", icon:"📸"},
-    {id:"care_card",     label:"ケアカード", icon:"💝"},
-    {id:"thank_you_card",label:"サンキューカード", icon:"💌"},
-    {id:"brand_hang_tag",label:"ブランドハングタグ", icon:"🏷️"},
-    {id:"packaging",     label:"パッケージ・ラッピング", icon:"📦"},
-    {id:"lookbook",      label:"ルックブック・カタログ", icon:"📖"},
-    {id:"price_list",    label:"価格表・メニュー", icon:"📋"},
-  ],
-};
+var PRODUCTS = [
+  {id:"poster",     label:"ポスター・プリント", icon:"🖼️"},
+  {id:"milestone",  label:"マイルストーンカード", icon:"📸"},
+  {id:"cake_topper",label:"ケーキトッパー", icon:"🎂"},
+  {id:"banner",     label:"バナー・ガーランド", icon:"🎉"},
+  {id:"invitation", label:"招待状", icon:"✉️"},
+  {id:"bundle",     label:"バンドルセット", icon:"📦"},
+  {id:"welcome",    label:"ウェルカムサイン", icon:"🪧"},
+  {id:"thankyou",   label:"Thank Youタグ", icon:"💌"},
+];
 
-// ============================================================
-// ツール
-// ============================================================
 var TOOLS = [
-  {id:"canva", label:"Canva",     icon:"🎨", titleWord:"Editable Canva Template",          tagWord:"editable canva template"},
-  {id:"corjl", label:"Corjl",     icon:"✏️", titleWord:"Editable Corjl Template",          tagWord:"editable corjl template"},
-  {id:"pdf",   label:"印刷用PDF", icon:"📄", titleWord:"Printable PDF Instant Download",   tagWord:"printable pdf instant download"},
+  {id:"canva", label:"Canva",     icon:"🎨", tw:"Editable Canva Template",        tg:"editable canva template"},
+  {id:"corjl", label:"Corjl",     icon:"✏️", tw:"Editable Corjl Template",        tg:"editable corjl template"},
+  {id:"pdf",   label:"印刷用PDF", icon:"📄", tw:"Printable PDF Instant Download",  tg:"printable pdf instant download"},
 ];
 
 // ============================================================
-// データベース: カテゴリ_シーン → base data
+// データベース: scene_product
 // ============================================================
 var DB = {
-  // ── INVITATION ──
-  "invitation_wedding":       {t:["Wedding Invitation Template Printable","Wedding Invite Suite Digital Download","Elegant Wedding Invitation Bundle Printable"],tags:["wedding invitation","wedding invite template","printable wedding","editable wedding invitation","wedding stationery","digital wedding invite","wedding suite","wedding card template","wedding printable set","instant download wedding"],seo:95,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "invitation_baby_shower":   {t:["Baby Shower Invitation Printable Template","Baby Shower Invite Bundle Digital Download","Sweet Baby Shower Invitation Suite Printable"],tags:["baby shower invitation","baby shower invite","printable baby shower","baby shower template","shower invitation printable","baby shower party","digital shower invite","editable baby shower","baby shower bundle","instant download shower"],seo:96,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "invitation_birthday_kids": {t:["Kids Birthday Invitation Printable Template","Children Birthday Party Invite Digital Download","Fun Birthday Invitation Bundle Printable"],tags:["kids birthday invitation","children birthday invite","birthday party printable","birthday invitation template","printable birthday invite","kids party invite","editable birthday invitation","birthday bundle","children party invite","instant download birthday"],seo:95,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "invitation_birthday_adult":{t:["Adult Birthday Invitation Printable Template","Elegant Birthday Party Invite Digital Download","Birthday Celebration Invitation Bundle Printable"],tags:["adult birthday invitation","birthday party invite","printable birthday invite","elegant birthday invitation","birthday template printable","celebration invite","adult party invitation","birthday invite download","editable party invite","instant download invite"],seo:90,comp:"中",vol:"高い",trend:"→安定"},
-  "invitation_graduation":    {t:["Graduation Party Invitation Printable Template","Grad Party Invite Digital Download","Graduation Celebration Invitation Bundle Printable"],tags:["graduation invitation","grad party invite","graduation party printable","printable graduation invite","graduation template","grad party bundle","high school graduation","college graduation invite","graduation celebration","instant download graduation"],seo:88,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "invitation_bridal_shower": {t:["Bridal Shower Invitation Printable Template","Bride to Be Party Invite Digital Download","Bridal Shower Suite Bundle Printable"],tags:["bridal shower invitation","bride to be invite","bridal shower printable","bridal party invite","bachelorette invitation","bridal shower template","bridal invite bundle","editable bridal invite","bridal shower party","instant download bridal"],seo:91,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "invitation_xmas_party":    {t:["Christmas Party Invitation Printable Template","Holiday Party Invite Digital Download","Festive Christmas Invitation Bundle Printable"],tags:["christmas party invitation","holiday party invite","christmas invite printable","festive party invitation","christmas party template","holiday invite bundle","christmas celebration invite","printable christmas party","xmas party invitation","instant download christmas"],seo:93,comp:"高",vol:"非常に高い",trend:"↑季節需要"},
-  "invitation_general_party": {t:["Party Invitation Printable Template","Celebration Invite Digital Download","Party Invitation Bundle Printable"],tags:["party invitation printable","celebration invite","printable party invite","event invitation template","party template printable","digital party invite","editable party invitation","party invite bundle","celebration printable","instant download invite"],seo:87,comp:"中",vol:"高い",trend:"→安定"},
+  // ── BABY SHOWER GIRL ──
+  "baby_girl_poster":     {t:["Baby Girl Shower Poster Printable","Pink Baby Shower Print Wall Art","Sweet Baby Girl Shower Poster Digital Download"],tags:["baby shower poster","baby girl poster","pink baby shower print","baby shower wall art","baby shower printable","girl shower decor","pink shower poster","baby shower art print","baby girl party decor","printable shower poster"],seo:88,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "baby_girl_milestone":  {t:["Baby Girl Milestone Cards Printable","Pink Monthly Milestone Card Set","Sweet Baby Girl Monthly Cards Printable"],tags:["baby milestone cards","baby girl milestone","pink milestone cards","monthly milestone printable","baby girl cards","newborn milestone","first year cards","baby photo props","milestone card set","baby girl printable"],seo:94,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_girl_cake_topper":{t:["Baby Girl Shower Cake Topper Printable","Pink Baby Shower Cake Topper Template","Sweet Baby Girl Cake Topper Printable"],tags:["baby shower cake topper","baby girl cake topper","pink cake topper","printable cake topper","baby shower topper","girl shower cake topper","sweet baby cake topper","baby cake decoration","shower cake topper printable","editable cake topper"],seo:87,comp:"低",vol:"高い",trend:"↑上昇中"},
+  "baby_girl_banner":     {t:["Baby Girl Shower Banner Printable","Pink Baby Shower Garland Template","Sweet Baby Girl Party Banner Printable"],tags:["baby shower banner","baby girl banner","pink shower banner","printable baby banner","baby shower garland","girl shower garland","baby shower bunting","pink party banner","sweet baby banner","shower banner printable"],seo:89,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "baby_girl_invitation": {t:["Baby Girl Shower Invitation Printable","Pink Baby Shower Invite Template","Sweet Baby Shower Invitation Printable"],tags:["baby shower invitation","baby girl invite","pink baby shower","shower invitation printable","baby shower template","girl shower invite","sweet baby invite","printable shower invite","baby girl party invite","editable shower invitation"],seo:96,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_girl_bundle":     {t:["Baby Girl Shower Bundle Printable Set","Pink Baby Shower Party Pack Digital Download","Sweet Baby Girl Shower Decoration Bundle"],tags:["baby shower bundle","baby girl bundle","pink shower set","baby shower party pack","shower decoration bundle","girl shower bundle","baby shower printable set","pink baby shower bundle","sweet baby bundle","baby shower decoration set"],seo:95,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_girl_welcome":    {t:["Baby Girl Shower Welcome Sign Printable","Pink Baby Shower Welcome Board Template","Sweet Baby Welcome Sign Printable"],tags:["baby shower welcome sign","baby girl welcome sign","pink welcome sign","printable welcome sign","shower welcome board","girl shower welcome","baby shower sign","sweet baby welcome","welcome board printable","baby shower decor sign"],seo:86,comp:"中",vol:"高い",trend:"→安定"},
+  "baby_girl_thankyou":   {t:["Baby Girl Shower Thank You Tag Printable","Pink Baby Shower Thank You Card Template","Sweet Baby Thank You Tag Printable"],tags:["baby shower thank you","baby girl thank you tag","pink thank you tag","shower thank you printable","baby thank you card","girl shower thank you","sweet baby thank you","printable thank you tag","baby shower tag","thank you tag printable"],seo:85,comp:"低",vol:"高い",trend:"→安定"},
 
-  // ── WALLART ──
-  "wallart_nursery":  {t:["Nursery Wall Art Printable Set","Baby Room Decor Art Print Digital Download","Nursery Printable Art Bundle"],tags:["nursery wall art","baby room decor","nursery printable","nursery art set","baby wall art","nursery decor print","baby room art","printable nursery","nursery art bundle","instant download nursery"],seo:92,comp:"中",vol:"非常に高い",trend:"↑上昇中"},
-  "wallart_kids_room":{t:["Kids Room Wall Art Printable Set","Children Room Decor Print Digital Download","Kids Bedroom Art Bundle Printable"],tags:["kids room art","children wall art","kids bedroom decor","kids room printable","children room print","boy room art","girl room art","playroom wall art","kids art bundle","instant download kids art"],seo:89,comp:"中",vol:"高い",trend:"→安定"},
-  "wallart_living":   {t:["Living Room Wall Art Printable Set","Home Decor Art Print Digital Download","Gallery Wall Art Bundle Printable"],tags:["wall art printable","home decor print","gallery wall set","living room art","printable wall art","digital art download","home wall print","art print set","wall decor printable","instant download art"],seo:93,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "wallart_kitchen":  {t:["Kitchen Wall Art Printable Set","Dining Room Decor Print Digital Download","Kitchen Art Bundle Printable"],tags:["kitchen wall art","dining room print","kitchen decor printable","kitchen art set","farmhouse kitchen art","food wall art","kitchen printable","restaurant art print","kitchen quote art","instant download kitchen"],seo:86,comp:"中",vol:"高い",trend:"→安定"},
-  "wallart_office":   {t:["Office Wall Art Printable Set","Home Office Decor Print Digital Download","Workspace Art Bundle Printable"],tags:["office wall art","home office decor","workspace printable","motivational office art","office art set","desk wall art","office decor print","work from home art","office printable","instant download office"],seo:88,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "wallart_quote":    {t:["Quote Wall Art Printable","Inspirational Quote Print Digital Download","Motivational Quote Art Bundle Printable"],tags:["quote wall art","inspirational print","motivational poster","quote printable","wall quote print","inspirational wall art","quote art download","motivational wall decor","printable quote poster","instant download quote"],seo:90,comp:"高",vol:"高い",trend:"→安定"},
-  "wallart_botanical":{t:["Botanical Wall Art Printable Set","Plant Print Digital Download Set","Botanical Illustration Art Bundle Printable"],tags:["botanical wall art","plant printable art","botanical illustration","botanical print set","flower wall art","plant art download","botanical poster","greenery wall print","floral art printable","instant download botanical"],seo:93,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "wallart_abstract": {t:["Abstract Wall Art Printable Set","Modern Abstract Print Digital Download","Abstract Art Bundle Printable"],tags:["abstract wall art","modern art printable","abstract print set","contemporary wall art","abstract art download","colorful abstract print","geometric wall art","abstract poster printable","modern home decor","instant download abstract"],seo:87,comp:"中",vol:"高い",trend:"↑上昇中"},
+  // ── BABY SHOWER BOY ──
+  "baby_boy_poster":     {t:["Baby Boy Shower Poster Printable","Blue Baby Shower Print Wall Art","Little Guy Baby Shower Poster Digital Download"],tags:["baby shower poster","baby boy poster","blue baby shower print","baby shower wall art","baby shower printable","boy shower decor","blue shower poster","baby shower art print","baby boy party decor","printable shower poster"],seo:86,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "baby_boy_milestone":  {t:["Baby Boy Milestone Cards Printable","Blue Monthly Milestone Card Set","Little Guy Baby Monthly Cards Printable"],tags:["baby milestone cards","baby boy milestone","blue milestone cards","monthly milestone printable","baby boy cards","newborn milestone","first year cards","baby photo props","milestone card set","baby boy printable"],seo:92,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_boy_cake_topper":{t:["Baby Boy Shower Cake Topper Printable","Blue Baby Shower Cake Topper Template","Little Guy Cake Topper Printable"],tags:["baby shower cake topper","baby boy cake topper","blue cake topper","printable cake topper","baby shower topper","boy shower cake topper","little guy cake topper","baby cake decoration","shower cake topper printable","editable cake topper"],seo:85,comp:"低",vol:"高い",trend:"↑上昇中"},
+  "baby_boy_banner":     {t:["Baby Boy Shower Banner Printable","Blue Baby Shower Garland Template","Little Guy Party Banner Printable"],tags:["baby shower banner","baby boy banner","blue shower banner","printable baby banner","baby shower garland","boy shower garland","baby shower bunting","blue party banner","little guy banner","shower banner printable"],seo:87,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "baby_boy_invitation": {t:["Baby Boy Shower Invitation Printable","Blue Baby Shower Invite Template","Little Guy Baby Shower Invitation Printable"],tags:["baby shower invitation","baby boy invite","blue baby shower","shower invitation printable","baby shower template","boy shower invite","little guy invite","printable shower invite","baby boy party invite","editable shower invitation"],seo:94,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_boy_bundle":     {t:["Baby Boy Shower Bundle Printable Set","Blue Baby Shower Party Pack Digital Download","Little Guy Shower Decoration Bundle"],tags:["baby shower bundle","baby boy bundle","blue shower set","baby shower party pack","shower decoration bundle","boy shower bundle","baby shower printable set","blue baby shower bundle","little guy bundle","baby shower decoration set"],seo:93,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_boy_welcome":    {t:["Baby Boy Shower Welcome Sign Printable","Blue Baby Shower Welcome Board Template","Little Guy Welcome Sign Printable"],tags:["baby shower welcome sign","baby boy welcome sign","blue welcome sign","printable welcome sign","shower welcome board","boy shower welcome","baby shower sign","little guy welcome","welcome board printable","baby shower decor sign"],seo:84,comp:"中",vol:"高い",trend:"→安定"},
+  "baby_boy_thankyou":   {t:["Baby Boy Shower Thank You Tag Printable","Blue Baby Shower Thank You Card Template","Little Guy Thank You Tag Printable"],tags:["baby shower thank you","baby boy thank you tag","blue thank you tag","shower thank you printable","baby thank you card","boy shower thank you","little guy thank you","printable thank you tag","baby shower tag","thank you tag printable"],seo:83,comp:"低",vol:"高い",trend:"→安定"},
 
-  // ── PLANNER ──
-  "planner_daily":    {t:["Daily Planner Printable Bundle","Productivity Daily Planner Digital Download","Undated Daily Planner Template Printable"],tags:["daily planner printable","productivity planner","undated planner","daily schedule printable","planner template","digital planner bundle","editable daily planner","habit tracker","goal planner","instant download planner"],seo:94,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "planner_weekly":   {t:["Weekly Planner Printable Bundle","Weekly Schedule Template Digital Download","Undated Weekly Planner Printable"],tags:["weekly planner printable","weekly schedule template","undated weekly planner","planner printable bundle","weekly layout planner","digital weekly planner","editable weekly planner","week at a glance","weekly organizer","instant download planner"],seo:92,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "planner_budget":   {t:["Budget Planner Printable Bundle","Finance Planner Digital Download","Monthly Budget Template Printable"],tags:["budget planner printable","finance planner","monthly budget template","savings tracker","expense tracker printable","money planner","financial planner bundle","budget worksheet","debt tracker","instant download budget"],seo:93,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "planner_meal":     {t:["Meal Planner Printable Bundle","Weekly Meal Plan Template Digital Download","Meal Planning Printable Set"],tags:["meal planner printable","weekly meal plan","meal planning template","grocery list printable","food planner","dinner planner","weekly menu printable","meal prep planner","recipe planner","instant download meal"],seo:91,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "planner_fitness":  {t:["Fitness Planner Printable Bundle","Workout Tracker Digital Download","Health and Fitness Planner Printable"],tags:["fitness planner printable","workout tracker","health planner","exercise log printable","fitness journal","workout planner bundle","gym planner","weight loss tracker","fitness tracker printable","instant download fitness"],seo:89,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "planner_wedding_plan":{t:["Wedding Planner Printable Bundle","Wedding Planning Checklist Digital Download","Bridal Planner Template Printable"],tags:["wedding planner printable","wedding planning checklist","bridal planner bundle","wedding binder printable","wedding organizer","wedding budget planner","wedding timeline","wedding vendor list","wedding checklist","instant download wedding"],seo:88,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "planner_study":    {t:["Study Planner Printable Bundle","Student Planner Digital Download","Academic Planner Template Printable"],tags:["study planner printable","student planner","academic planner","school planner bundle","homework planner","study schedule printable","college planner","exam study planner","back to school planner","instant download study"],seo:87,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "planner_calendar": {t:["Calendar Printable Bundle Digital Download","Monthly Calendar Template Printable","2025 2026 Calendar Printable"],tags:["printable calendar","monthly calendar","wall calendar printable","calendar template","editable calendar","desk calendar","yearly calendar","undated calendar","calendar bundle","instant download calendar"],seo:91,comp:"中",vol:"非常に高い",trend:"↑上昇中"},
+  // ── BABY SHOWER NEUTRAL ──
+  "baby_neutral_poster":     {t:["Gender Neutral Baby Shower Poster Printable","Boho Baby Shower Print Wall Art","Earthy Neutral Baby Shower Poster Digital Download"],tags:["gender neutral baby shower","boho baby shower poster","neutral shower print","baby shower wall art","neutral baby printable","boho shower decor","earthy baby poster","gender neutral shower art","neutral baby shower print","boho baby art"],seo:90,comp:"低",vol:"高い",trend:"↑上昇中"},
+  "baby_neutral_milestone":  {t:["Gender Neutral Milestone Cards Printable","Boho Baby Monthly Milestone Card Set","Earthy Neutral Baby Monthly Cards Printable"],tags:["gender neutral milestone","boho milestone cards","neutral monthly cards","earthy baby milestone","gender neutral baby cards","boho baby printable","neutral milestone set","earthy milestone cards","gender neutral baby shower","unisex baby milestone"],seo:93,comp:"低",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_neutral_cake_topper":{t:["Gender Neutral Baby Shower Cake Topper Printable","Boho Baby Cake Topper Template","Neutral Baby Shower Cake Topper Printable"],tags:["gender neutral cake topper","boho baby cake topper","neutral cake topper","printable cake topper","baby shower topper","boho shower cake topper","earthy cake topper","neutral baby decoration","gender neutral baby topper","unisex cake topper"],seo:85,comp:"低",vol:"高い",trend:"↑上昇中"},
+  "baby_neutral_banner":     {t:["Gender Neutral Baby Shower Banner Printable","Boho Baby Shower Garland Template","Earthy Neutral Party Banner Printable"],tags:["gender neutral baby banner","boho shower banner","neutral baby banner","earthy shower garland","gender neutral garland","boho baby bunting","neutral party banner","earthy baby shower","gender neutral shower","unisex baby banner"],seo:88,comp:"低",vol:"高い",trend:"↑上昇中"},
+  "baby_neutral_invitation": {t:["Gender Neutral Baby Shower Invitation Printable","Boho Baby Shower Invite Template","Earthy Neutral Baby Shower Invitation"],tags:["gender neutral shower invitation","boho baby shower invite","neutral baby shower","earthy shower invite","gender neutral invitation","boho shower printable","neutral baby invite","earthy baby invitation","unisex baby shower invite","gender neutral baby party"],seo:91,comp:"低",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_neutral_bundle":     {t:["Gender Neutral Baby Shower Bundle Printable","Boho Baby Shower Party Pack Digital Download","Earthy Neutral Shower Decoration Bundle"],tags:["gender neutral shower bundle","boho baby shower set","neutral shower pack","earthy baby shower bundle","gender neutral party pack","boho shower decoration","neutral baby bundle","earthy shower set","unisex baby bundle","gender neutral shower decoration"],seo:92,comp:"低",vol:"非常に高い",trend:"↑上昇中"},
+  "baby_neutral_welcome":    {t:["Gender Neutral Baby Shower Welcome Sign Printable","Boho Baby Welcome Board Template","Earthy Neutral Welcome Sign Printable"],tags:["gender neutral welcome sign","boho baby welcome sign","neutral welcome board","earthy welcome sign","gender neutral shower sign","boho welcome board","neutral baby sign","earthy baby welcome","unisex welcome sign","boho shower welcome"],seo:86,comp:"低",vol:"高い",trend:"→安定"},
+  "baby_neutral_thankyou":   {t:["Gender Neutral Baby Shower Thank You Tag Printable","Boho Baby Thank You Card Template","Earthy Neutral Thank You Tag Printable"],tags:["gender neutral thank you tag","boho baby thank you","neutral thank you tag","earthy thank you printable","gender neutral shower tag","boho thank you card","neutral baby tag","earthy baby thank you","unisex thank you tag","boho shower thank you"],seo:83,comp:"低",vol:"高い",trend:"→安定"},
 
-  // ── LABEL ──
-  "label_candle_label": {t:["Candle Label Template Printable","Candle Jar Label Digital Download","Candle Label Bundle Printable"],tags:["candle label template","candle jar label","printable candle label","editable candle label","candle packaging","homemade candle label","candle business label","small business candle","candle label set","instant download label"],seo:93,comp:"中",vol:"非常に高い",trend:"↑上昇中"},
-  "label_pantry_label": {t:["Pantry Label Printable Bundle","Kitchen Organization Label Digital Download","Pantry Canister Label Set Printable"],tags:["pantry labels printable","kitchen labels","pantry organization","spice jar labels","editable pantry labels","food storage labels","pantry label set","farmhouse labels","kitchen organization","instant download labels"],seo:91,comp:"中",vol:"非常に高い",trend:"↑上昇中"},
-  "label_product_label":{t:["Product Label Template Printable","Small Business Label Digital Download","Product Packaging Label Bundle Printable"],tags:["product label template","small business label","packaging label","brand label template","editable product label","printable label set","business label","product sticker label","packaging design","instant download label"],seo:92,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "label_gift_tag":    {t:["Gift Tag Printable Bundle","Holiday Gift Tag Digital Download","Gift Label Set Printable"],tags:["gift tag printable","holiday gift tag","printable gift tag","editable gift tag","gift label set","christmas gift tag","birthday gift tag","gift wrap tag","present tag printable","instant download tag"],seo:90,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "label_hang_tag":    {t:["Hang Tag Template Printable","Product Hang Tag Digital Download","Boutique Hang Tag Bundle Printable"],tags:["hang tag template","product hang tag","boutique hang tag","clothing tag template","jewelry tag template","small business hang tag","editable hang tag","product tag printable","brand hang tag","instant download tag"],seo:89,comp:"高",vol:"高い",trend:"↑上昇中"},
-  "label_wine_label":  {t:["Wine Label Template Printable","Custom Wine Bottle Label Digital Download","Wine Label Bundle Printable"],tags:["wine label template","wine bottle label","custom wine label","printable wine label","editable wine label","wedding wine label","wine label set","birthday wine label","personalized wine label","instant download label"],seo:85,comp:"低",vol:"高い",trend:"↑上昇中"},
-  "label_jam_label":   {t:["Jam Label Template Printable","Food Jar Label Digital Download","Canning Label Bundle Printable"],tags:["jam label template","food jar label","canning label printable","mason jar label","printable jam label","editable jar label","homemade jam label","food label set","canning label set","instant download label"],seo:83,comp:"低",vol:"中程度",trend:"→安定"},
-  "label_bath_label":  {t:["Bath Product Label Template Printable","Cosmetic Label Digital Download","Bath and Body Label Bundle Printable"],tags:["bath label template","cosmetic label","soap label printable","lotion label template","bath product label","small business bath","editable cosmetic label","beauty label set","skincare label","instant download label"],seo:87,comp:"中",vol:"高い",trend:"↑上昇中"},
+  // ── BIRTHDAY GIRL ──
+  "bday_girl_poster":     {t:["Birthday Girl Poster Printable","Princess Birthday Print Wall Art","Girls Birthday Party Poster Digital Download"],tags:["birthday girl poster","princess birthday print","girls birthday wall art","birthday party printable","girl birthday decor","princess party poster","birthday art print","girls party decor","birthday poster printable","princess birthday decor"],seo:89,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "bday_girl_milestone":  {t:["Birthday Girl Milestone Card Printable","Princess Age Milestone Print","Girls Birthday Milestone Poster Printable"],tags:["birthday milestone card","girl birthday milestone","princess milestone print","birthday age card","girls milestone printable","birthday keepsake card","age milestone poster","princess birthday card","birthday milestone printable","girl birthday keepsake"],seo:87,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "bday_girl_cake_topper":{t:["Birthday Girl Cake Topper Printable","Princess Birthday Cake Topper Template","Girls Party Cake Topper Printable"],tags:["birthday cake topper","girl birthday topper","princess cake topper","printable cake topper","birthday party topper","girls cake decoration","princess party topper","birthday topper printable","girl party topper","editable cake topper"],seo:90,comp:"中",vol:"非常に高い",trend:"↑上昇中"},
+  "bday_girl_banner":     {t:["Birthday Girl Banner Printable","Princess Birthday Garland Template","Girls Party Banner Printable"],tags:["birthday girl banner","princess birthday banner","girls party banner","birthday garland printable","girl birthday garland","princess party bunting","birthday banner printable","girls birthday bunting","princess garland","birthday party banner"],seo:91,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "bday_girl_invitation": {t:["Birthday Girl Invitation Printable","Princess Birthday Party Invite Template","Girls Birthday Invitation Printable"],tags:["birthday girl invitation","princess birthday invite","girls birthday party","birthday invitation printable","girl party invite","princess party invitation","birthday invite template","girls birthday printable","princess birthday party","editable birthday invitation"],seo:95,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "bday_girl_bundle":     {t:["Birthday Girl Party Bundle Printable","Princess Birthday Party Pack Digital Download","Girls Birthday Decoration Bundle Printable"],tags:["birthday girl bundle","princess party bundle","girls birthday pack","birthday party set","girl birthday decoration","princess birthday bundle","birthday printable bundle","girls party set","princess party pack","birthday decoration bundle"],seo:94,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "bday_girl_welcome":    {t:["Birthday Girl Welcome Sign Printable","Princess Birthday Welcome Board Template","Girls Party Welcome Sign Printable"],tags:["birthday welcome sign","girl birthday sign","princess welcome board","birthday party sign","girls welcome sign","princess birthday board","printable welcome sign","birthday board printable","girl party sign","princess party welcome"],seo:86,comp:"中",vol:"高い",trend:"→安定"},
+  "bday_girl_thankyou":   {t:["Birthday Girl Thank You Tag Printable","Princess Birthday Thank You Card Template","Girls Party Thank You Tag Printable"],tags:["birthday thank you tag","girl birthday thank you","princess thank you card","birthday thank you printable","girls thank you tag","princess party thank you","birthday tag printable","girl party thank you","thank you tag birthday","princess thank you tag"],seo:84,comp:"低",vol:"高い",trend:"→安定"},
 
-  // ── PARTY DECO ──
-  "party_deco_birthday_deco":   {t:["Birthday Party Decoration Bundle Printable","Birthday Party Pack Digital Download","Birthday Decor Set Printable"],tags:["birthday party decoration","birthday party bundle","birthday decor set","party decoration printable","birthday banner","printable party pack","birthday party printable","party garland","birthday backdrop","instant download party"],seo:94,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "party_deco_wedding_deco":    {t:["Wedding Decoration Bundle Printable","Wedding Party Pack Digital Download","Wedding Decor Set Printable"],tags:["wedding decoration bundle","wedding party pack","wedding decor printable","wedding banner","wedding garland","printable wedding decor","wedding backdrop","wedding table decor","wedding party set","instant download wedding"],seo:88,comp:"中",vol:"高い",trend:"→安定"},
-  "party_deco_baby_shower_deco":{t:["Baby Shower Decoration Bundle Printable","Baby Shower Party Pack Digital Download","Baby Shower Decor Set Printable"],tags:["baby shower decoration","shower party bundle","baby shower decor set","shower decoration printable","baby shower banner","printable shower pack","shower backdrop","baby shower garland","shower party set","instant download shower"],seo:93,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "party_deco_xmas_deco":       {t:["Christmas Decoration Bundle Printable","Holiday Party Pack Digital Download","Christmas Decor Set Printable"],tags:["christmas decoration bundle","holiday party pack","christmas decor printable","christmas banner","xmas garland","printable christmas decor","holiday backdrop","christmas party set","festive decoration","instant download christmas"],seo:95,comp:"高",vol:"非常に高い",trend:"↑季節需要"},
-  "party_deco_halloween_deco":  {t:["Halloween Decoration Bundle Printable","Halloween Party Pack Digital Download","Spooky Decor Set Printable"],tags:["halloween decoration","halloween party bundle","spooky decor printable","halloween banner","halloween garland","printable halloween","halloween backdrop","spooky party set","halloween decoration set","instant download halloween"],seo:91,comp:"中",vol:"非常に高い",trend:"↑季節需要"},
-  "party_deco_graduation_deco": {t:["Graduation Party Decoration Bundle Printable","Grad Party Pack Digital Download","Graduation Decor Set Printable"],tags:["graduation decoration","grad party bundle","graduation decor printable","graduation banner","grad garland","printable graduation decor","graduation party set","congrats grad decor","class of 2025 decor","instant download graduation"],seo:87,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "party_deco_bridal_deco":     {t:["Bridal Shower Decoration Bundle Printable","Bachelorette Party Pack Digital Download","Bridal Decor Set Printable"],tags:["bridal shower decoration","bachelorette party bundle","bridal decor printable","bridal banner","bachelorette garland","printable bridal decor","bride to be decor","bridal shower set","hen party decoration","instant download bridal"],seo:89,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "party_deco_general_deco":    {t:["Party Decoration Bundle Printable","Celebration Party Pack Digital Download","Party Decor Set Printable"],tags:["party decoration bundle","celebration party pack","party decor printable","party banner","printable party set","party garland","backdrop printable","party decoration set","celebration decor","instant download party"],seo:85,comp:"中",vol:"高い",trend:"→安定"},
+  // ── BIRTHDAY BOY ──
+  "bday_boy_poster":     {t:["Birthday Boy Poster Printable","Adventure Birthday Print Wall Art","Boys Birthday Party Poster Digital Download"],tags:["birthday boy poster","adventure birthday print","boys birthday wall art","birthday party printable","boy birthday decor","adventure party poster","birthday art print","boys party decor","birthday poster printable","superhero birthday decor"],seo:88,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "bday_boy_milestone":  {t:["Birthday Boy Milestone Card Printable","Adventure Age Milestone Print","Boys Birthday Milestone Poster Printable"],tags:["birthday milestone card","boy birthday milestone","adventure milestone print","birthday age card","boys milestone printable","birthday keepsake card","age milestone poster","adventure birthday card","birthday milestone printable","boy birthday keepsake"],seo:86,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "bday_boy_cake_topper":{t:["Birthday Boy Cake Topper Printable","Adventure Birthday Cake Topper Template","Boys Party Cake Topper Printable"],tags:["birthday cake topper","boy birthday topper","adventure cake topper","printable cake topper","birthday party topper","boys cake decoration","superhero party topper","birthday topper printable","boy party topper","editable cake topper"],seo:89,comp:"中",vol:"非常に高い",trend:"↑上昇中"},
+  "bday_boy_banner":     {t:["Birthday Boy Banner Printable","Adventure Birthday Garland Template","Boys Party Banner Printable"],tags:["birthday boy banner","adventure birthday banner","boys party banner","birthday garland printable","boy birthday garland","adventure party bunting","birthday banner printable","boys birthday bunting","superhero garland","birthday party banner"],seo:90,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "bday_boy_invitation": {t:["Birthday Boy Invitation Printable","Adventure Birthday Party Invite Template","Boys Birthday Invitation Printable"],tags:["birthday boy invitation","adventure birthday invite","boys birthday party","birthday invitation printable","boy party invite","adventure party invitation","birthday invite template","boys birthday printable","superhero birthday party","editable birthday invitation"],seo:94,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "bday_boy_bundle":     {t:["Birthday Boy Party Bundle Printable","Adventure Birthday Party Pack Digital Download","Boys Birthday Decoration Bundle Printable"],tags:["birthday boy bundle","adventure party bundle","boys birthday pack","birthday party set","boy birthday decoration","adventure birthday bundle","birthday printable bundle","boys party set","superhero party pack","birthday decoration bundle"],seo:93,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "bday_boy_welcome":    {t:["Birthday Boy Welcome Sign Printable","Adventure Birthday Welcome Board Template","Boys Party Welcome Sign Printable"],tags:["birthday welcome sign","boy birthday sign","adventure welcome board","birthday party sign","boys welcome sign","adventure birthday board","printable welcome sign","birthday board printable","boy party sign","superhero party welcome"],seo:85,comp:"中",vol:"高い",trend:"→安定"},
+  "bday_boy_thankyou":   {t:["Birthday Boy Thank You Tag Printable","Adventure Birthday Thank You Card Template","Boys Party Thank You Tag Printable"],tags:["birthday thank you tag","boy birthday thank you","adventure thank you card","birthday thank you printable","boys thank you tag","adventure party thank you","birthday tag printable","boy party thank you","thank you tag birthday","superhero thank you tag"],seo:83,comp:"低",vol:"高い",trend:"→安定"},
 
-  // ── BABY ──
-  "baby_milestone":     {t:["Baby Milestone Cards Printable","Monthly Milestone Card Set Digital Download","Baby Monthly Cards Printable Bundle"],tags:["baby milestone cards","monthly milestone","milestone card set","baby monthly cards","newborn milestone","printable milestone","baby photo props","first year cards","baby shower gift","instant download baby"],seo:94,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "baby_naming":        {t:["Baby Name Sign Printable","Birth Announcement Printable Template","Baby Name Poster Digital Download"],tags:["baby name sign","birth announcement","baby name poster","nursery name sign","printable name sign","birth stats print","newborn announcement","baby room decor","name sign printable","instant download nursery"],seo:90,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "baby_birth_announce":{t:["Birth Announcement Printable Template","Baby Announcement Card Digital Download","Newborn Announcement Printable"],tags:["birth announcement","newborn announcement","baby announcement card","birth announcement template","printable birth announcement","baby reveal","new baby announcement","birth stats printable","baby card printable","instant download announcement"],seo:88,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "baby_baby_shower_set":{t:["Baby Shower Bundle Printable Set","Baby Shower Party Pack Digital Download","Baby Shower Decoration Set Printable"],tags:["baby shower bundle","shower party set","baby shower printable","shower decoration set","baby shower pack","printable shower set","baby shower decor","shower invitation bundle","baby shower games","instant download shower"],seo:95,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "baby_nursery_art":   {t:["Nursery Wall Art Printable Set","Baby Room Art Print Digital Download","Nursery Decor Art Bundle Printable"],tags:["nursery wall art","baby room decor","nursery art printable","baby wall art","nursery decor set","printable nursery art","baby room print","nursery art bundle","baby room wall print","instant download nursery"],seo:91,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "baby_baby_gift_tag": {t:["Baby Gift Tag Printable Bundle","Baby Shower Gift Tag Digital Download","Newborn Gift Label Printable"],tags:["baby gift tag","shower gift tag","newborn gift label","baby tag printable","baby shower tag","printable baby tag","baby gift label","sweet baby tag","baby gift wrap tag","instant download tag"],seo:84,comp:"低",vol:"高い",trend:"→安定"},
-  "baby_pregnancy":     {t:["Pregnancy Tracker Printable Bundle","Pregnancy Journal Digital Download","Maternity Planner Printable"],tags:["pregnancy tracker","pregnancy journal","maternity planner","bump tracker printable","pregnancy planner","baby countdown","pregnancy printable","prenatal tracker","pregnancy milestone","instant download pregnancy"],seo:86,comp:"低",vol:"高い",trend:"↑上昇中"},
-  "baby_baby_planner":  {t:["Baby Planner Printable Bundle","Baby Tracker Digital Download","Newborn Baby Log Printable"],tags:["baby planner printable","newborn tracker","baby log printable","feeding tracker","sleep tracker baby","baby schedule printable","infant tracker","baby daily log","newborn planner","instant download baby"],seo:85,comp:"低",vol:"高い",trend:"↑上昇中"},
-
-  // ── STICKER ──
-  "sticker_planner_sticker":{t:["Planner Sticker Sheet Printable Bundle","Planner Sticker Pack Digital Download","Printable Planner Sticker Set"],tags:["planner sticker sheet","planner sticker printable","planner sticker pack","printable planner stickers","digital sticker sheet","planner accessories","sticker bundle printable","planner sticker set","functional stickers","instant download sticker"],seo:94,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "sticker_bujo_sticker":  {t:["Bullet Journal Sticker Sheet Printable","Bujo Sticker Pack Digital Download","Journal Sticker Bundle Printable"],tags:["bullet journal sticker","bujo sticker printable","journal sticker sheet","bujo sticker pack","printable bujo sticker","journal accessories","bujo printable set","bullet journal printable","journaling sticker","instant download sticker"],seo:90,comp:"高",vol:"高い",trend:"↑上昇中"},
-  "sticker_cute_sticker":  {t:["Cute Sticker Sheet Printable Bundle","Kawaii Sticker Pack Digital Download","Cute Printable Sticker Set"],tags:["cute sticker sheet","kawaii sticker printable","cute sticker pack","printable cute sticker","kawaii printable","cute digital sticker","kawaii sticker set","cute sticker bundle","adorable sticker printable","instant download sticker"],seo:91,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "sticker_season_sticker":{t:["Seasonal Sticker Sheet Printable Bundle","Holiday Sticker Pack Digital Download","Seasonal Printable Sticker Set"],tags:["seasonal sticker sheet","holiday sticker printable","seasonal sticker pack","holiday printable sticker","christmas sticker sheet","fall sticker printable","seasonal sticker bundle","holiday sticker set","festive sticker printable","instant download sticker"],seo:89,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "sticker_label_sticker": {t:["Label Sticker Sheet Printable Bundle","Functional Label Sticker Digital Download","Label Sticker Set Printable"],tags:["label sticker printable","functional sticker label","printable label sticker","label sticker sheet","organization sticker","label sticker set","printable label set","sticker label bundle","functional planner sticker","instant download sticker"],seo:87,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "sticker_reward_sticker":{t:["Reward Sticker Chart Printable","Kids Reward Sticker Digital Download","Behavior Chart Sticker Printable"],tags:["reward sticker chart","kids reward sticker","behavior chart sticker","printable reward chart","chore chart sticker","kids behavior sticker","reward chart printable","star sticker chart","children reward sticker","instant download sticker"],seo:85,comp:"低",vol:"高い",trend:"↑上昇中"},
-  "sticker_kids_sticker":  {t:["Kids Sticker Sheet Printable Bundle","Children Sticker Pack Digital Download","Cute Kids Sticker Set Printable"],tags:["kids sticker sheet","children sticker printable","kids sticker pack","printable kids sticker","children digital sticker","fun kids sticker","kids sticker set","children sticker bundle","cute children sticker","instant download sticker"],seo:88,comp:"中",vol:"高い",trend:"↑上昇中"},
-  "sticker_quote_sticker": {t:["Quote Sticker Sheet Printable Bundle","Motivational Sticker Pack Digital Download","Quote Printable Sticker Set"],tags:["quote sticker sheet","motivational sticker","quote sticker printable","inspirational sticker","printable quote sticker","planner quote sticker","affirmation sticker","quote sticker bundle","positive sticker printable","instant download sticker"],seo:86,comp:"中",vol:"高い",trend:"→安定"},
-
-  // ── BRAND ──
-  "brand_social_post":    {t:["Social Media Template Bundle","Instagram Post Template Digital Download","Social Media Template Pack Printable"],tags:["social media template","instagram post template","canva social media","brand social template","instagram bundle","editable social template","content creator template","social media pack","brand instagram","instant download template"],seo:93,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "brand_instagram_story":{t:["Instagram Story Template Bundle","Instagram Stories Pack Digital Download","Instagram Story Template Set Printable"],tags:["instagram story template","story template bundle","instagram stories pack","editable story template","canva story template","brand story template","instagram story set","social media story","content creator story","instant download template"],seo:92,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "brand_care_card":      {t:["Care Card Template Printable","Product Care Instruction Card Digital Download","Care Guide Card Bundle Printable"],tags:["care card template","care instruction card","product care card","jewelry care card","care guide template","small business care card","editable care card","care card printable","packaging insert care","instant download card"],seo:88,comp:"低",vol:"高い",trend:"↑上昇中"},
-  "brand_thank_you_card": {t:["Thank You Card Template Printable","Business Thank You Card Digital Download","Small Business Thank You Insert Printable"],tags:["thank you card template","business thank you","small business insert","customer thank you","packaging insert card","printable thank you","thank you note template","brand thank you card","shop thank you","instant download thank you"],seo:90,comp:"中",vol:"高い",trend:"→安定"},
-  "brand_brand_hang_tag":  {t:["Brand Hang Tag Template Printable","Business Hang Tag Digital Download","Small Business Tag Bundle Printable"],tags:["brand hang tag","business hang tag","small business tag","clothing hang tag","jewelry hang tag","editable hang tag","brand tag template","boutique hang tag","product hang tag","instant download tag"],seo:89,comp:"高",vol:"高い",trend:"↑上昇中"},
-  "brand_packaging":      {t:["Packaging Template Printable Bundle","Product Packaging Digital Download","Brand Packaging Set Printable"],tags:["packaging template","product packaging","brand packaging","small business packaging","editable packaging","packaging bundle","printable packaging","brand identity","business packaging set","instant download packaging"],seo:88,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
-  "brand_lookbook":       {t:["Lookbook Template Printable","Product Catalog Template Digital Download","Brand Lookbook Bundle Printable"],tags:["lookbook template","product catalog","brand lookbook","collection lookbook","editable lookbook","small business catalog","product portfolio","brand catalog","lookbook printable","instant download lookbook"],seo:84,comp:"低",vol:"中程度",trend:"↑上昇中"},
-  "brand_price_list":     {t:["Price List Template Printable","Service Menu Template Digital Download","Price Sheet Bundle Printable"],tags:["price list template","service menu template","pricing template","small business price list","editable price list","salon price list","photography price list","price sheet printable","menu price template","instant download price"],seo:86,comp:"中",vol:"高い",trend:"↑上昇中"},
+  // ── WEDDING ──
+  "wedding_poster":     {t:["Wedding Poster Printable Template","Bridal Party Print Wall Art","Wedding Photo Print Printable"],tags:["wedding poster printable","bridal party print","wedding wall art","wedding print template","wedding party poster","bridal print digital","wedding art print","wedding decor printable","wedding photo print","printable wedding poster"],seo:85,comp:"中",vol:"高い",trend:"→安定"},
+  "wedding_milestone":  {t:["Wedding Milestone Card Printable","Anniversary Milestone Print Template","Wedding Date Milestone Printable"],tags:["wedding milestone card","anniversary milestone","wedding date print","wedding keepsake card","bridal milestone printable","wedding anniversary card","milestone wedding printable","wedding memory card","bridal keepsake","anniversary print template"],seo:82,comp:"低",vol:"中程度",trend:"→安定"},
+  "wedding_cake_topper":{t:["Wedding Cake Topper Printable Template","Bride and Groom Cake Topper","Wedding Cake Topper Digital Download"],tags:["wedding cake topper","bride groom cake topper","printable wedding topper","wedding cake decoration","editable cake topper","bridal cake topper","wedding party topper","mr mrs cake topper","wedding cake printable","custom cake topper"],seo:88,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "wedding_banner":     {t:["Wedding Banner Printable Template","Bridal Party Garland Digital Download","Wedding Bunting Banner Printable"],tags:["wedding banner printable","bridal garland","wedding bunting","wedding party banner","printable wedding banner","bridal banner template","wedding garland printable","ceremony banner","wedding party bunting","bridal party garland"],seo:87,comp:"中",vol:"高い",trend:"→安定"},
+  "wedding_invitation": {t:["Wedding Invitation Template Printable","Elegant Wedding Invite Digital Download","Wedding Invitation Suite Printable"],tags:["wedding invitation","wedding invite template","printable wedding invite","editable wedding invitation","wedding stationery","digital wedding invite","wedding suite","elegant wedding invite","wedding card template","instant download wedding"],seo:95,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "wedding_bundle":     {t:["Wedding Bundle Printable Set","Wedding Stationery Suite Digital Download","Complete Wedding Printable Bundle"],tags:["wedding bundle","wedding stationery suite","wedding printable set","complete wedding bundle","wedding party pack","bridal bundle printable","wedding decoration set","wedding suite bundle","wedding stationery bundle","printable wedding set"],seo:92,comp:"高",vol:"非常に高い",trend:"↑上昇中"},
+  "wedding_welcome":    {t:["Wedding Welcome Sign Printable Template","Bridal Welcome Board Digital Download","Wedding Welcome Board Printable"],tags:["wedding welcome sign","bridal welcome board","wedding sign printable","welcome board template","wedding party sign","printable welcome sign","ceremony welcome sign","wedding board printable","bridal sign template","wedding decor sign"],seo:90,comp:"中",vol:"高い",trend:"↑上昇中"},
+  "wedding_thankyou":   {t:["Wedding Thank You Tag Printable Template","Bridal Thank You Card Digital Download","Wedding Favor Thank You Tag Printable"],tags:["wedding thank you tag","bridal thank you card","wedding favor tag","thank you tag printable","wedding gift tag","bridal thank you printable","wedding stationery thank you","favor tag wedding","wedding thank you card","printable wedding tag"],seo:88,comp:"中",vol:"高い",trend:"→安定"},
 };
 
-// ============================================================
-// キーワード→英語変換マッピング
-// ============================================================
 var KW_MAP = {
   "ボホ":["boho","bohemian"],"ボヘミアン":["bohemian","boho"],
   "ナチュラル":["natural","organic"],"ボタニカル":["botanical","floral"],
-  "ミニマル":["minimalist","minimal","clean"],"モダン":["modern","contemporary"],
+  "ミニマル":["minimalist","minimal"],"モダン":["modern","contemporary"],
   "ヴィンテージ":["vintage","retro"],"レトロ":["retro","vintage"],
   "フェミニン":["feminine","girly"],"ラグジュアリー":["luxury","elegant"],
   "エレガント":["elegant","sophisticated"],"ラスティック":["rustic","farmhouse"],
   "スカンジナビアン":["scandinavian","nordic"],"コケット":["coquette","bow","ribbon"],
-  "リボン":["ribbon","bow","coquette"],"フローラル":["floral","flower"],
-  "花":["floral","flower"],"ピンク":["pink","blush"],
-  "ブルー":["blue","navy"],"グリーン":["green","sage"],
-  "セージ":["sage green","sage"],"ベージュ":["beige","neutral"],
-  "アース":["earthy","earth tone"],"パステル":["pastel","soft"],
-  "レインボー":["rainbow","colorful"],"ゴールド":["gold","golden"],
-  "ローズゴールド":["rose gold","blush gold"],"プリンセス":["princess","royal"],
-  "ユニコーン":["unicorn","magical"],"恐竜":["dinosaur","dino"],
-  "スペース":["space","galaxy"],"モノクロ":["black and white","monochrome"],
+  "リボン":["ribbon","bow"],"フローラル":["floral","flower"],
+  "ピンク":["pink","blush"],"ブルー":["blue","navy"],
+  "グリーン":["green","sage"],"セージ":["sage green","sage"],
+  "ベージュ":["beige","neutral"],"アース":["earthy","earth tone"],
+  "パステル":["pastel","soft"],"レインボー":["rainbow","colorful"],
+  "ゴールド":["gold","golden"],"ローズゴールド":["rose gold","blush gold"],
+  "プリンセス":["princess","royal"],"ユニコーン":["unicorn","magical"],
+  "恐竜":["dinosaur","dino"],"スペース":["space","galaxy"],
   "水彩":["watercolor","watercolour"],"手書き":["hand drawn","handwritten"],
   "かわいい":["cute","kawaii"],"シンプル":["simple","clean"],
-  "おしゃれ":["chic","stylish"],"大人":["adult","sophisticated"],
-  "女の子":["girl","feminine"],"男の子":["boy","adventure"],
-  "赤ちゃん":["baby","newborn"],"春":["spring","floral"],
-  "夏":["summer","tropical"],"秋":["autumn","fall","harvest"],
-  "冬":["winter","cozy"],"クリスマス":["christmas","holiday"],
+  "おしゃれ":["chic","stylish"],"モノクロ":["black and white","monochrome"],
+  "くすみ":["dusty","muted"],"くすみピンク":["dusty pink","muted pink"],
+  "テラコッタ":["terracotta","earthy"],"ラベンダー":["lavender","purple"],
+  "マッシュルーム":["mushroom","earthy neutral"],"バタフライ":["butterfly","garden"],
 };
 
-// ============================================================
-// 生成ロジック
-// ============================================================
-function buildResult(cat, scene, tool, keyword) {
-  var key = cat+"_"+scene;
+function buildResult(scene, product, tool, keyword) {
+  var key = scene+"_"+product;
   var base = DB[key];
   if (!base) {
     var keys = Object.keys(DB);
-    var fallback = keys.find(function(k){ return k.indexOf(cat+"_")===0; });
-    base = fallback ? DB[fallback] : {t:["Printable Template Digital Download","Editable Template Printable","Digital Printable Bundle"],tags:["printable template","digital download","editable template","instant download","printable bundle","digital template","canva template","printable set","template download","diy printable"],seo:78,comp:"中",vol:"高い",trend:"→安定"};
+    var fb = keys.find(function(k){ return k.indexOf(scene+"_")===0; }) || keys[0];
+    base = DB[fb];
   }
   var t = TOOLS.find(function(x){ return x.id===tool; }) || TOOLS[0];
 
-  // キーワード処理
-  var kwTags = [];
-  var kwTitleWord = "";
+  var kwTags=[], kwTitle="";
   if (keyword && keyword.trim()) {
-    var kw = keyword.trim();
+    var kw=keyword.trim();
     Object.keys(KW_MAP).forEach(function(jp){
-      if (kw.indexOf(jp)>=0) {
-        KW_MAP[jp].forEach(function(en){ if(kwTags.indexOf(en)<0) kwTags.push(en); });
-      }
+      if(kw.indexOf(jp)>=0) KW_MAP[jp].forEach(function(en){ if(kwTags.indexOf(en)<0) kwTags.push(en); });
     });
-    if (/[a-zA-Z]/.test(kw)) {
-      kw.split(/[\s,　]+/).forEach(function(w){
-        if(w.length>1 && kwTags.indexOf(w.toLowerCase())<0) kwTags.push(w.toLowerCase());
-      });
+    if(/[a-zA-Z]/.test(kw)) {
+      kw.split(/[\s,　]+/).forEach(function(w){ if(w.length>1 && kwTags.indexOf(w.toLowerCase())<0) kwTags.push(w.toLowerCase()); });
     }
-    kwTitleWord = kwTags.length>0 ? cap(kwTags[0]) : "";
+    kwTitle = kwTags.length>0 ? cap(kwTags[0]) : "";
   }
 
-  // タイトル3候補
-  var titles = base.t.map(function(tp, i){
-    var title = (i===0 && kwTitleWord) ? kwTitleWord+" "+tp : tp;
-    title += " "+t.titleWord;
-    if(title.length>140) title = title.substring(0,137)+"...";
+  var titles = base.t.map(function(tp,i){
+    var title = (i===0 && kwTitle) ? kwTitle+" "+tp : tp;
+    title += " "+t.tw;
+    if(title.length>140) title=title.substring(0,137)+"...";
     return title;
   });
 
-  // タグ13個
-  var tags = [];
+  var tags=[];
   kwTags.slice(0,3).forEach(function(x){ if(tags.indexOf(x)<0) tags.push(x); });
   base.tags.forEach(function(x){ if(tags.indexOf(x)<0) tags.push(x); });
-  if(tags.indexOf(t.tagWord)<0) tags.push(t.tagWord);
+  if(tags.indexOf(t.tg)<0) tags.push(t.tg);
   if(tags.indexOf("digital download")<0) tags.push("digital download");
   if(tags.indexOf("instant download")<0) tags.push("instant download");
-  tags = tags.slice(0,13);
+  tags=tags.slice(0,13);
 
   return {titles:titles, tags:tags, seoScore:base.seo, competition:base.comp, searchVol:base.vol, trend:base.trend};
 }
 
 function cap(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : ""; }
 
-// ============================================================
-// State
-// ============================================================
-var S = {step:0, cat:"", scene:"", tool:"", keyword:"", result:null};
+var S={step:0,scene:"",product:"",tool:"",keyword:"",result:null};
 function set(o){ Object.assign(S,o); render(); }
 
-function copyText(text, id) {
+function copyText(text,id){
   if(navigator.clipboard) navigator.clipboard.writeText(text.replace(/\\n/g,"\n"));
-  var el = document.getElementById(id);
-  if(!el) return;
-  var orig = el.innerHTML;
-  el.innerHTML = "✓ コピー済";
-  el.style.background="rgba(180,240,200,0.6)"; el.style.color="#208040";
+  var el=document.getElementById(id); if(!el) return;
+  var orig=el.innerHTML;
+  el.innerHTML="✓ コピー済"; el.style.background="rgba(180,240,200,0.6)"; el.style.color="#208040";
   setTimeout(function(){ el.innerHTML=orig; el.style.background=""; el.style.color=""; },1800);
 }
 
-// ============================================================
-// HTML helpers
-// ============================================================
 function eh(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function ej(s){ return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g,"\\n"); }
 
-function hd() {
+function hd(){
   return '<div style="text-align:center;margin-bottom:1.4rem;animation:fadeUp 0.6s ease both">'
     +'<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.78);border-radius:20px;padding:5px 16px;margin-bottom:10px;border:1px solid rgba(180,220,180,0.5)">'
     +'<span style="font-size:15px">🏷️</span>'
@@ -343,7 +216,7 @@ function hd() {
     +'</div>';
 }
 
-function pb(step,total,pct) {
+function pb(step,total,pct){
   var h='<div style="margin-bottom:1rem">'
     +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
     +'<span style="font-size:11px;color:#508060;font-weight:600">STEP '+(step+1)+' / '+total+'</span>'
@@ -358,48 +231,44 @@ function pb(step,total,pct) {
   return h;
 }
 
-function nav(backId, nextId, nextLbl, dis) {
-  var b = S.step>0 ? '<button class="btn-back" id="'+backId+'">← もどる</button>' : '<div></div>';
+function nav(backId,nextId,nextLbl,dis){
+  var b=S.step>0?'<button class="btn-back" id="'+backId+'">← もどる</button>':'<div></div>';
   return '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem">'+b+'<button class="btn-next" id="'+nextId+'"'+(dis?' disabled':'')+'>'+nextLbl+'</button></div>';
 }
 
 function wrap(h){ return '<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem 3rem"><div style="width:100%;max-width:460px">'+h+'</div></div>'; }
 
-// ============================================================
-// Step renders
-// ============================================================
 function r0(){
-  var h=hd()+'<div class="card" style="animation:fadeUp 0.7s ease 0.1s both">'+pb(0,4,S.cat?15:5);
-  h+='<p style="font-size:11px;color:#70A080;margin:0 0 3px;font-weight:700;text-transform:uppercase;letter-spacing:1px">何を作ってる？ 🛍️</p>';
-  h+='<h2 style="font-size:17px;font-weight:900;color:#204030;margin:0 0 0.9rem">商品カテゴリを選んでね</h2>';
+  var h=hd()+'<div class="card" style="animation:fadeUp 0.7s ease 0.1s both">'+pb(0,4,S.scene?15:5);
+  h+='<p style="font-size:11px;color:#70A080;margin:0 0 3px;font-weight:700;text-transform:uppercase;letter-spacing:1px">どんなシーン？ 🎯</p>';
+  h+='<h2 style="font-size:17px;font-weight:900;color:#204030;margin:0 0 0.9rem">パーティーの種類を選んでね</h2>';
   h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:0.5rem">';
-  CATEGORIES.forEach(function(c){
-    var s=S.cat===c.id;
-    h+='<button class="btn-opt'+(s?' sel':'')+'" data-a="cat" data-v="'+c.id+'">'
-      +'<span style="font-size:20px;display:block;margin-bottom:2px">'+c.icon+'</span>'
-      +'<span style="font-size:11px;font-weight:'+(s?800:600)+';color:'+(s?'#205040':'#304030')+';display:block;line-height:1.2">'+eh(c.label)+'</span>'
-      +'<span style="font-size:10px;color:#80A090">'+eh(c.desc)+'</span>'
+  SCENES.forEach(function(sc){
+    var s=S.scene===sc.id;
+    h+='<button class="btn-opt'+(s?' sel':'')+'" data-a="scene" data-v="'+sc.id+'">'
+      +'<span style="font-size:20px;display:block;margin-bottom:2px">'+sc.icon+'</span>'
+      +'<span style="font-size:11px;font-weight:'+(s?800:600)+';color:'+(s?'#205040':'#304030')+';display:block;line-height:1.2">'+eh(sc.label)+'</span>'
+      +'<span style="font-size:10px;color:#80A090">'+sc.desc+'</span>'
       +'</button>';
   });
-  h+='</div>'+nav('','n0','次へ →',!S.cat)+'</div>';
+  h+='</div>'+nav('','n0','次へ →',!S.scene)+'</div>';
   h+='<p style="text-align:center;font-size:11px;color:rgba(80,130,90,0.55);margin:0.8rem 0 0">Etsyトレンドデータ × SEO最適化 🌿</p>';
   return wrap(h);
 }
 
 function r1(){
-  var scenes = SCENES[S.cat]||[];
-  var h=hd()+'<div class="card" style="animation:fadeUp 0.5s ease both">'+pb(1,4,S.scene?40:28);
-  h+='<p style="font-size:11px;color:#70A080;margin:0 0 3px;font-weight:700;text-transform:uppercase;letter-spacing:1px">どんなシーン・ターゲット？ 🎯</p>';
-  h+='<h2 style="font-size:17px;font-weight:900;color:#204030;margin:0 0 0.9rem">詳細を選んでね</h2>';
+  var h=hd()+'<div class="card" style="animation:fadeUp 0.5s ease both">'+pb(1,4,S.product?40:28);
+  h+='<p style="font-size:11px;color:#70A080;margin:0 0 3px;font-weight:700;text-transform:uppercase;letter-spacing:1px">何を作ってる？ 🛍️</p>';
+  h+='<h2 style="font-size:17px;font-weight:900;color:#204030;margin:0 0 0.9rem">商品の種類を選んでね</h2>';
   h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:0.5rem">';
-  scenes.forEach(function(sc){
-    var s=S.scene===sc.id;
-    h+='<button class="btn-opt'+(s?' sel':'')+'" data-a="scene" data-v="'+sc.id+'">'
-      +'<span style="font-size:20px;display:block;margin-bottom:2px">'+sc.icon+'</span>'
-      +'<span style="font-size:11px;font-weight:'+(s?800:600)+';color:'+(s?'#205040':'#304030')+';display:block;line-height:1.2">'+eh(sc.label)+'</span>'
+  PRODUCTS.forEach(function(p){
+    var s=S.product===p.id;
+    h+='<button class="btn-opt'+(s?' sel':'')+'" data-a="product" data-v="'+p.id+'">'
+      +'<span style="font-size:20px;display:block;margin-bottom:2px">'+p.icon+'</span>'
+      +'<span style="font-size:11px;font-weight:'+(s?800:600)+';color:'+(s?'#205040':'#304030')+';display:block;line-height:1.2">'+eh(p.label)+'</span>'
       +'</button>';
   });
-  h+='</div>'+nav('b1','n1','次へ →',!S.scene)+'</div>';
+  h+='</div>'+nav('b1','n1','次へ →',!S.product)+'</div>';
   h+='<p style="text-align:center;font-size:11px;color:rgba(80,130,90,0.55);margin:0.8rem 0 0">Etsyトレンドデータ × SEO最適化 🌿</p>';
   return wrap(h);
 }
@@ -422,7 +291,7 @@ function r2(){
 }
 
 function r3(){
-  var hints=["ボホ","ナチュラル","ミニマル","フェミニン","コケット・リボン","パステル","水彩","ゴールド","フローラル","ヴィンテージ","かわいい","モノクロ"];
+  var hints=["ボホ","コケット・リボン","くすみピンク","水彩","フローラル","ミニマル","パステル","ゴールド","ヴィンテージ","テラコッタ","ラベンダー","プリンセス"];
   var h=hd()+'<div class="card" style="animation:fadeUp 0.5s ease both">'+pb(3,4,S.keyword?90:78);
   h+='<p style="font-size:11px;color:#70A080;margin:0 0 3px;font-weight:700;text-transform:uppercase;letter-spacing:1px">スタイル・キーワード（任意）✍️</p>';
   h+='<h2 style="font-size:17px;font-weight:900;color:#204030;margin:0 0 5px">デザインの特徴を入力してね</h2>';
@@ -445,7 +314,6 @@ function rResult(){
 
   var h=hd()+'<div class="card" style="animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both">';
 
-  // SEO
   h+='<div style="background:rgba(255,255,255,0.65);border:1px solid rgba(180,220,180,0.5);border-radius:16px;padding:1rem;margin-bottom:0.75rem">'
    +'<p style="font-size:10px;color:#508050;margin:0 0 7px;font-weight:700;text-transform:uppercase;letter-spacing:1px">📊 SEO分析レポート</p>'
    +'<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#606060;font-weight:600">SEOスコア</span><span style="font-size:11px;font-weight:800;color:'+sc+'">'+d.seoScore+'/100</span></div>'
@@ -459,7 +327,6 @@ function rResult(){
   if(d.competition==="低") h+='<div style="margin-top:7px;background:rgba(180,240,200,0.3);border-radius:8px;padding:6px 10px"><p style="font-size:11px;color:#205830;margin:0">✅ 競合が少なくねらい目！今がチャンスです。</p></div>';
   h+='</div>';
 
-  // タイトル
   h+='<div style="background:rgba(255,255,255,0.65);border:1px solid rgba(180,210,240,0.5);border-radius:16px;padding:1rem;margin-bottom:0.75rem">'
    +'<p style="font-size:10px;color:#4060A0;margin:0 0 7px;font-weight:700;text-transform:uppercase;letter-spacing:1px">📝 タイトル候補（タップでコピー）</p>';
   d.titles.forEach(function(t,i){
@@ -476,7 +343,6 @@ function rResult(){
   });
   h+='</div>';
 
-  // タグ
   var tagsStr=ej(d.tags.join(", "));
   h+='<div style="background:rgba(255,255,255,0.65);border:1px solid rgba(200,180,240,0.5);border-radius:16px;padding:1rem;margin-bottom:0.75rem">'
    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">'
@@ -484,12 +350,11 @@ function rResult(){
    +'<button class="copy-btn" id="ctag" onclick="copyText(\''+tagsStr+'\',\'ctag\')" style="background:rgba(200,180,240,0.3);color:#6040A0;font-size:10px;padding:4px 10px">全タグをコピー</button>'
    +'</div><div>';
   d.tags.forEach(function(t,i){
-    var tid="t"+i;
+    var tid="tg"+i;
     h+='<span class="tag-chip" onclick="copyText(\''+ej(t)+'\',\''+tid+'\')"><span id="'+tid+'">'+eh(t)+'</span></span>';
   });
   h+='</div><p style="font-size:10px;color:#B0A0C0;margin:7px 0 0;text-align:center">個別タグもタップでコピーできます 👆</p></div>';
 
-  // ガイド
   h+='<div style="background:rgba(255,248,235,0.7);border:1px solid rgba(220,180,100,0.4);border-radius:14px;padding:0.75rem;margin-bottom:0.75rem">'
    +'<p style="font-size:10px;color:#806020;margin:0 0 5px;font-weight:700">💡 Etsyへの貼り付け方</p>'
    +'<p style="font-size:11px;color:#705020;margin:0 0 2px;line-height:1.5">① タイトルをタップ → EtsyのTitle欄にペースト</p>'
@@ -504,12 +369,8 @@ function rResult(){
   return wrap(h);
 }
 
-// ============================================================
-// render & bind
-// ============================================================
 function render(){
-  var app=document.getElementById("app");
-  if(!app) return;
+  var app=document.getElementById("app"); if(!app) return;
   if(S.result) app.innerHTML=rResult();
   else if(S.step===0) app.innerHTML=r0();
   else if(S.step===1) app.innerHTML=r1();
@@ -521,13 +382,13 @@ function render(){
 function bind(){
   document.querySelectorAll('[data-a]').forEach(function(el){
     el.addEventListener('click',function(){
-      var a=this.getAttribute('data-a'), v=this.getAttribute('data-v');
-      if(a==='cat')   set({cat:v, scene:'', tool:'', step:0});
-      if(a==='scene') set({scene:v});
-      if(a==='tool')  set({tool:v});
+      var a=this.getAttribute('data-a'),v=this.getAttribute('data-v');
+      if(a==='scene')   set({scene:v,product:'',tool:''});
+      if(a==='product') set({product:v,tool:''});
+      if(a==='tool')    set({tool:v});
       if(a==='hint'){
         var cur=document.getElementById('kw');
-        var val=(cur?cur.value:S.keyword);
+        var val=cur?cur.value:S.keyword;
         val=val?(val+' '+v).trim():v;
         S.keyword=val; render();
       }
@@ -537,18 +398,18 @@ function bind(){
   if(kw) kw.addEventListener('input',function(){ S.keyword=this.value; });
 
   var ids={
-    'n0':function(){ if(S.cat) set({step:1}); },
-    'n1':function(){ if(S.scene) set({step:2}); },
+    'n0':function(){ if(S.scene) set({step:1}); },
+    'n1':function(){ if(S.product) set({step:2}); },
     'n2':function(){ if(S.tool) set({step:3}); },
-    'b1':function(){ set({step:0,scene:'',tool:''}); },
+    'b1':function(){ set({step:0,product:'',tool:''}); },
     'b2':function(){ set({step:1,tool:''}); },
     'b3':function(){ set({step:2}); },
     'gen':function(){
       var k=document.getElementById('kw');
       var kv=k?k.value:S.keyword;
-      set({keyword:kv, result:buildResult(S.cat,S.scene,S.tool,kv)});
+      set({keyword:kv,result:buildResult(S.scene,S.product,S.tool,kv)});
     },
-    'rst':function(){ set({step:0,cat:'',scene:'',tool:'',keyword:'',result:null}); },
+    'rst':function(){ set({step:0,scene:'',product:'',tool:'',keyword:'',result:null}); },
   };
   Object.keys(ids).forEach(function(id){
     var el=document.getElementById(id);
